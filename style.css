@@ -45,6 +45,10 @@ main {
   transition: all 0.75s;
 }
 
+.hidden {
+  display: none;
+}
+
 /* ELEMENTS */
 .name {
   position: relative;
