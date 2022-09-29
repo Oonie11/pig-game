@@ -4,20 +4,27 @@
 ////////////////////////////////////
 //VARIABLE DECLARATION
 ////////////////////////////////////
+
+///////////////////////////////////
+////////CONST-VARIABLE
+const btnRollDice = document.querySelector('.btn--roll');
+const btnNew = document.querySelector('.btn--new');
+const btnHold = document.querySelector('.btn--hold');
+const current0El = document.getElementById('current--0');
+const current1El = document.getElementById('current--1');
+const diceEl = document.querySelector('.dice');
 const player0El = document.querySelector('.player--0');
 const player1El = document.querySelector('.player--1');
 const score0El = document.querySelector('#score--0');
 const score1El = document.querySelector('#score--1');
-const current0El = document.getElementById('current--0');
-const current1El = document.getElementById('current--1');
-const diceEl = document.querySelector('.dice');
-const btnRollDice = document.querySelector('.btn--roll');
-const btnNew = document.querySelector('.btn--new');
-const btnHold = document.querySelector('.btn--hold');
 const scores = [0, 0];
+
+/////////////////////////////////////
+//////LET-VARIABLE
 let diceRoll = 0;
 let currentScore = 0;
 let activePlayer = 0;
+let playing = true;
 
 ////////////////////////////////////
 //FUNCTION DECLARATION
@@ -49,6 +56,11 @@ const declareWinner = () => {
   document
     .querySelector(`.player--${activePlayer}`)
     .classList.remove('player--active');
+
+  diceEl.classList.add('hidden');
+  playing = false;
+  console.log(playing);
+  document.getElementById(`current--${activePlayer}`).textContent = 0;
 };
 
 ////////////////////////////////////////
@@ -74,6 +86,36 @@ const holdScore = player => {
   document.querySelector(`#score--${player}`).textContent = scores[player];
 };
 
+////////////////////////////////////////
+//START NEW-GAME FUNCTION
+const startNewGame = () => {
+  console.log(`new game started`);
+  //setting the game state to true
+  playing = true;
+  //removing the winner style if exist
+  if (
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.contains('player--winner')
+  ) {
+    document
+      .querySelector(`.player--${activePlayer}`)
+      .classList.remove('player--winner');
+  }
+  //setting the background of active player.
+  player0El.classList.add('player--active');
+  player1El.classList.remove('player--active');
+  //resetting the DOM Score values to 0
+  score0El.textContent = 0;
+  score1El.textContent = 0;
+  //resetting the Score array to 0
+  for (let i = 0; i < scores.length; i++) {
+    scores[i] = 0;
+  }
+  //resetting the current score value to 0
+  currentScore = 0;
+};
+
 ////////////////////////////////////
 //INITIAL VALUES OF THE GAME
 ////////////////////////////////////
@@ -88,25 +130,35 @@ diceEl.classList.add('hidden');
 ////////////////////////////////////////
 //ADD EVENT LISTENER TO ROLL DICE BUTTON
 btnRollDice.addEventListener('click', () => {
-  rollDice();
-  showDiceImg(diceRoll);
-  if (diceRoll !== 1) {
-    currentScore += diceRoll;
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore;
-  } else {
-    switchPlayer();
-    console.log(`Dice rolled 1 switch to player ${activePlayer + 1}`);
+  if (playing) {
+    rollDice();
+    showDiceImg(diceRoll);
+    if (diceRoll !== 1) {
+      currentScore += diceRoll;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
+    } else {
+      switchPlayer();
+      console.log(`Dice rolled 1 switch to player ${activePlayer + 1}`);
+    }
   }
 });
 
 ////////////////////////////////////////
 //ADD EVENT-LISTENER  TO HOLD BUTTON
 btnHold.addEventListener('click', () => {
-  holdScore(activePlayer);
-  if (scores[activePlayer] >= 20) {
-    declareWinner();
-  } else {
-    switchPlayer();
+  if (playing) {
+    holdScore(activePlayer);
+    if (scores[activePlayer] >= 20) {
+      declareWinner();
+    } else {
+      switchPlayer();
+    }
   }
+});
+
+////////////////////////////////////////
+//ADD EVENT LISTENER TO NEW-GAME BUTTON
+btnNew.addEventListener('click', () => {
+  startNewGame();
 });
