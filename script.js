@@ -21,14 +21,28 @@ const scores = [0, 0];
 
 /////////////////////////////////////
 //////LET-VARIABLE
-let diceRoll = 0;
-let currentScore = 0;
-let activePlayer = 0;
-let playing = true;
+let diceRoll;
+let currentScore;
+let activePlayer;
+let playing;
+let gameLimit;
 
 ////////////////////////////////////
 //FUNCTION DECLARATION
 ////////////////////////////////////
+
+/////////////////////////////////////
+//////INITIALIZE-GAME
+const init = () => {
+  diceRoll = 0;
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
+  gameLimit = 100;
+};
+
+// calling the init function on loading
+init();
 
 ////////////////////////////////////////
 //GENERATE RANDOM-NUMBER FUNCTION
@@ -46,9 +60,17 @@ const showDiceImg = number => {
 };
 
 ////////////////////////////////////////
+//HIDE DICE IMAGE FUNCTION
+const hideDiceImg = () => {
+  if (!diceEl.classList.contains('hidden')) {
+    diceEl.classList.add('hidden');
+  }
+};
+
+////////////////////////////////////////
 // DECLARE-WINNER FUNCTION
 const declareWinner = () => {
-  console.log('score reached 100. the game ends here');
+  console.log(`score reached ${gameLimit}. the game ends here`);
   console.log(`winner is Player ${activePlayer + 1}`);
   document
     .querySelector(`.player--${activePlayer}`)
@@ -102,9 +124,7 @@ const startNewGame = () => {
       .querySelector(`.player--${activePlayer}`)
       .classList.remove('player--winner');
   }
-  //setting the background of active player.
-  player0El.classList.add('player--active');
-  player1El.classList.remove('player--active');
+
   //resetting the DOM Score values to 0
   score0El.textContent = 0;
   score1El.textContent = 0;
@@ -114,8 +134,20 @@ const startNewGame = () => {
   }
   //resetting the current score value to 0
   currentScore = 0;
-};
+  //resetting the currentScore to 0
+  document.getElementById(`current--${activePlayer}`).textContent =
+    currentScore;
+  //setting the activePlayer to 1st player
+  activePlayer = 0;
+  // console.log(`active player changed to ${activePlayer}`);
+  //setting the background of active player.
+  player0El.classList.add('player--active');
+  player1El.classList.remove('player--active');
 
+  //hide dice.
+  hideDiceImg();
+};
+console.log(`activePlayer value in global scope ${activePlayer}`);
 ////////////////////////////////////
 //INITIAL VALUES OF THE GAME
 ////////////////////////////////////
@@ -149,10 +181,11 @@ btnRollDice.addEventListener('click', () => {
 btnHold.addEventListener('click', () => {
   if (playing) {
     holdScore(activePlayer);
-    if (scores[activePlayer] >= 20) {
+    if (scores[activePlayer] >= gameLimit) {
       declareWinner();
     } else {
       switchPlayer();
+      hideDiceImg();
     }
   }
 });
