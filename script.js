@@ -1,7 +1,9 @@
 //ACTIVATING STRICT MODE
 'use strict';
 
-//DECLARING VARIABLES
+////////////////////////////////////
+//VARIABLE DECLARATION
+////////////////////////////////////
 const player0El = document.querySelector('.player--0');
 const player1El = document.querySelector('.player--1');
 const score0El = document.querySelector('#score--0');
@@ -17,21 +19,27 @@ let diceRoll = 0;
 let currentScore = 0;
 let activePlayer = 0;
 
+////////////////////////////////////
 //FUNCTION DECLARATION
+////////////////////////////////////
 
-//function to generate random-number
+////////////////////////////////////////
+//GENERATE RANDOM-NUMBER FUNCTION
 const rollDice = () => {
   diceRoll = Math.trunc(Math.random() * 6) + 1;
 };
 
-//function to display rolled dice image on browser
+////////////////////////////////////////
+//SHOW DICE IMAGE FUNCTION
 const showDiceImg = number => {
   if (diceEl.classList.contains('hidden')) {
     diceEl.classList.remove('hidden');
   }
   diceEl.src = `./Assets/dice-${number}.png`;
 };
-// function to declare winner
+
+////////////////////////////////////////
+// DECLARE-WINNER FUNCTION
 const declareWinner = () => {
   console.log('score reached 100. the game ends here');
   console.log(`winner is Player ${activePlayer + 1}`);
@@ -42,7 +50,9 @@ const declareWinner = () => {
     .querySelector(`.player--${activePlayer}`)
     .classList.remove('player--active');
 };
-//SWITCH-PLAYER
+
+////////////////////////////////////////
+//SWITCH-PLAYER FUNCTION
 const switchPlayer = () => {
   //resetting the DOM currentScore to 0.
   document.getElementById(`current--${activePlayer}`).textContent = 0;
@@ -55,7 +65,8 @@ const switchPlayer = () => {
   player1El.classList.toggle('player--active');
 };
 
-//function to check winner and add score
+////////////////////////////////////////
+//HOLD-SCORE FUNCTION
 const holdScore = player => {
   //store the current score in scores array
   scores[player] += currentScore;
@@ -63,14 +74,18 @@ const holdScore = player => {
   document.querySelector(`#score--${player}`).textContent = scores[player];
 };
 
-//CONSOLE LOG TEST
-// console.log('Logged00: ' +  );
-
+////////////////////////////////////
 //INITIAL VALUES OF THE GAME
+////////////////////////////////////
 score0El.textContent = 0;
 score1El.textContent = 0;
 diceEl.classList.add('hidden');
 
+////////////////////////////////////
+//GAME-LOGIC
+////////////////////////////////////
+
+////////////////////////////////////////
 //ADD EVENT LISTENER TO ROLL DICE BUTTON
 btnRollDice.addEventListener('click', () => {
   rollDice();
@@ -85,6 +100,7 @@ btnRollDice.addEventListener('click', () => {
   }
 });
 
+////////////////////////////////////////
 //ADD EVENT-LISTENER  TO HOLD BUTTON
 btnHold.addEventListener('click', () => {
   holdScore(activePlayer);
